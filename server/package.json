@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "npm install && tsc -b && node ./dist/server.js"
+    "build": "tsc -b",            
+    "start": "node ./dist/server.js"   
   },
   "dependencies": {
     "@prisma/client": "^5.21.0",
@@ -12,6 +13,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
-    "prisma": "^5.21.0"
+    "prisma": "^5.21.0",
+    "typescript": "^5.5.3"    
   }
 }
