@@ -2,6 +2,7 @@ import { Line } from 'react-chartjs-2';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Chart, registerables } from 'chart.js';
+import { API_ENDPOINT } from '../constants';
 
 Chart.register(...registerables);
 
@@ -16,7 +17,7 @@ const AlertsAndTrends: React.FC = () => {
 
     const fetchAlerts = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/weather/alerts');
+            const response = await axios.get(API_ENDPOINT + '/api/weather/alerts');
             setAlerts(response.data);
         } catch (error) {
             console.error('Error fetching alerts:', error);
@@ -25,7 +26,7 @@ const AlertsAndTrends: React.FC = () => {
 
     const fetchHistoricalData = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/weather/historical');
+            const response = await axios.get(API_ENDPOINT + '/api/weather/historical');
             setHistoricalData(response.data);
         } catch (error) {
             console.error('Error fetching historical data:', error);

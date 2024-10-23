@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import SummaryCard from '../components/SummaryCard';
+import { API_ENDPOINT } from '../constants';
 
 const Summaries: React.FC = () => {
     const [summaries, setSummaries] = useState<any[]>([]);
@@ -12,7 +13,7 @@ const Summaries: React.FC = () => {
 
     const fetchSummaries = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/weather/daily-summaries');
+            const response = await axios.get(API_ENDPOINT +'/api/weather/daily-summaries');
             setSummaries(response.data);
         } catch (error) {
             console.error('Error fetching summaries:', error);

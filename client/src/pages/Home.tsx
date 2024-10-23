@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import WeatherCard from '../components/WeatherCard';
+import { API_ENDPOINT } from '../constants';
 
 const Home: React.FC = () => {
     const [weatherData, setWeatherData] = useState<any[]>([]);
@@ -12,7 +13,7 @@ const Home: React.FC = () => {
 
     const fetchWeatherData = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/weather/latest');
+            const response = await axios.get( API_ENDPOINT + '/api/weather/latest');
             setWeatherData(response.data);
         } catch (error) {
             console.error('Error fetching weather data:', error);
