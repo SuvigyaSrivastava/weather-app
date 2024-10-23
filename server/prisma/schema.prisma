@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model WeatherData {
+  id          Int      @id @default(autoincrement())
+  city        String
+  temperature Float
+  feelsLike   Float
+  condition   String
+  timestamp   DateTime @default(now())
+}
+
+model DailySummary {
+  id                Int      @id @default(autoincrement())
+  date              DateTime
+  city              String
+  avgTemp           Float
+  maxTemp           Float
+  minTemp           Float
+  dominantCondition String
+
+  // Add a unique constraint on (city, date)
+  @@unique([city, date])
+}
+
+model Alert {
+  id          Int      @id @default(autoincrement())
+  city        String
+  temperature Float
+  condition   String
+  alertType   String
+  timestamp   DateTime @default(now())
+  resolved    Boolean  @default(false)
+
+  // Optional: Index for querying alerts efficiently by city or time
+  @@index([city, timestamp])
+}
