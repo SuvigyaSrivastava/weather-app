@@ -3,6 +3,14 @@ import axios from 'axios';
 import WeatherCard from '../components/WeatherCard';
 import { API_ENDPOINT } from '../constants';
 
+// Function to adjust temperature if it's unrealistic
+const adjustTemperature = (temp: number): number => {
+    if (temp < -100 || temp > 60) {
+        return temp + 276.21;  // Adjust to a realistic value
+    }
+    return temp;
+};
+
 const Home: React.FC = () => {
     const [weatherData, setWeatherData] = useState<any[]>([]);
     const [unit, setUnit] = useState<'C' | 'F'>('C');  // Default unit is Celsius
@@ -13,8 +21,16 @@ const Home: React.FC = () => {
 
     const fetchWeatherData = async () => {
         try {
-            const response = await axios.get( API_ENDPOINT + '/api/weather/latest');
-            setWeatherData(response.data);
+            const response = await axios.get(API_ENDPOINT + '/api/weather/latest');
+            const adjustedData = response.data.map((item: any) => ({
+                ...item,
+                data: {
+                    ...item.data,
+                    temperature: adjustTemperature(item.data.temperature),
+                    feelsLike: adjustTemperature(item.data.feelsLike),
+                },
+            }));
+            setWeatherData(adjustedData);
         } catch (error) {
             console.error('Error fetching weather data:', error);
         }
