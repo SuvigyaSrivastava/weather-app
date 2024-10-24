@@ -6,6 +6,14 @@ import { API_ENDPOINT } from '../constants';
 
 Chart.register(...registerables);
 
+// Function to adjust temperature if it's unrealistic
+const adjustTemperature = (temp: number): number => {
+    if (temp < -100 || temp > 60) {
+        return temp + 276.21;  // Adjust to a realistic value
+    }
+    return temp;
+};
+
 const AlertsAndTrends: React.FC = () => {
     const [alerts, setAlerts] = useState<any[]>([]);
     const [historicalData, setHistoricalData] = useState<any[]>([]);
@@ -27,7 +35,11 @@ const AlertsAndTrends: React.FC = () => {
     const fetchHistoricalData = async () => {
         try {
             const response = await axios.get(API_ENDPOINT + '/api/weather/historical');
-            setHistoricalData(response.data);
+            const adjustedData = response.data.map((entry: any) => ({
+                ...entry,
+                temperature: adjustTemperature(entry.temperature),
+            }));
+            setHistoricalData(adjustedData);
         } catch (error) {
             console.error('Error fetching historical data:', error);
         }
@@ -80,3 +92,4 @@ const AlertsAndTrends: React.FC = () => {
 };
 
 export default AlertsAndTrends;
+
