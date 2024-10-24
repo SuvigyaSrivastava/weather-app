@@ -3,6 +3,14 @@ import axios from 'axios';
 import SummaryCard from '../components/SummaryCard';
 import { API_ENDPOINT } from '../constants';
 
+// Function to adjust temperature if it's unrealistic
+const adjustTemperature = (temp: number): number => {
+    if (temp < -100 || temp > 60) {
+        return temp + 276.21;  // Adjust to a realistic value
+    }
+    return temp;
+};
+
 const Summaries: React.FC = () => {
     const [summaries, setSummaries] = useState<any[]>([]);
     const [unit, setUnit] = useState<'C' | 'F'>('C');  // Default unit is Celsius
@@ -13,8 +21,14 @@ const Summaries: React.FC = () => {
 
     const fetchSummaries = async () => {
         try {
-            const response = await axios.get(API_ENDPOINT +'/api/weather/daily-summaries');
-            setSummaries(response.data);
+            const response = await axios.get(API_ENDPOINT + '/api/weather/daily-summaries');
+            const adjustedSummaries = response.data.map((summary: any) => ({
+                ...summary,
+                avgTemp: adjustTemperature(summary.avgTemp),
+                maxTemp: adjustTemperature(summary.maxTemp),
+                minTemp: adjustTemperature(summary.minTemp),
+            }));
+            setSummaries(adjustedSummaries);
         } catch (error) {
             console.error('Error fetching summaries:', error);
         }
